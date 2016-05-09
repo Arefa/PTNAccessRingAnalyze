@@ -3,15 +3,19 @@ from openpyxl import load_workbook, Workbook
 import networkx as nx
 
 # 读取纤缆连接关系表
-wb_fiber = load_workbook(filename='testbeilun.xlsx', read_only=True)
+wb_fiber = load_workbook(filename='fiberrela.xlsx', read_only=True)
 ws_fiber = wb_fiber.active
+
+# 读取网元信息表
+wb_ne = load_workbook(filename='neinfo.xlsx', read_only=True)
+ws_ne = wb_ne.active
+
+# 读取汇聚网元信息表
+wb_converge = load_workbook(filename='convergeinfo.xlsx', read_only=True)
+ws_converge = wb_converge.active
 
 # 定义将要添加进某一环图的路径列表
 path_list = []
-
-# 读取某一环的网元表
-wb_ne = load_workbook(filename='beilun01.xlsx', read_only=True)
-ws_ne = wb_ne.active
 
 # 定义接入环接入网元列表
 access_ne = []
@@ -23,10 +27,20 @@ converge_ne = []
 for i in range(11, ws_ne.max_row+1):
     ne_name = ws_ne.cell(row=i, column=1).value
     ne_type = ws_ne.cell(row=i, column=2).value
+    ne_ring = ws_ne.cell(row=i, column=12).value
     if ne_type in ('OptiX PTN 910', 'OptiX PTN 950', 'OptiX PTN 960'):
-        access_ne.append(ne_name)
+        access_ring_set = set(access_ring)
     else:
         converge_ne.append(ne_name)
+
+# # 分别生成接入环接入、汇聚网元
+# for i in range(11, ws_ne.max_row+1):
+#     ne_name = ws_ne.cell(row=i, column=1).value
+#     ne_type = ws_ne.cell(row=i, column=2).value
+#     if ne_type in ('OptiX PTN 910', 'OptiX PTN 950', 'OptiX PTN 960'):
+#         access_ne.append(ne_name)
+#     else:
+#         converge_ne.append(ne_name)
 # print access_ne
 # print converge_ne
 
